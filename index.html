@@ -1,54 +1,62 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8">
+<head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>360度全景 VR 体验 - Photo Sphere Viewer</title>
+    <title>360度全景照片预览</title>
     
-    <!-- 引入 Photo Sphere Viewer 样式文件 -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.com/npm/@photo-sphere-viewer/core/index.min.css"/>
-    
-    <style>
-      html, body {
-        margin: 0;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background-color: #000;
-      }
-      /* 全景容器撑满全屏 */
-      #viewer {
-        width: 100%;
-        height: 100%;
-      }
-    </style>
-  </head>
-  <body>
+    <!-- 引入 Photo Sphere Viewer 核心样式 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/core@5/index.min.css"/>
+    <!-- 引入自动旋转插件样式 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/autorotate-plugin@5/index.min.css"/>
 
-    <!-- 全景图挂载容器 -->
+    <style>
+        html, body {
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+        }
+        #viewer {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+
+    <!-- 关键：通过 Import Maps 映射 ES 模块路径 -->
+    <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "@photo-sphere-viewer/core": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/core@5/index.module.js",
+        "@photo-sphere-viewer/autorotate-plugin": "https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/autorotate-plugin@5/index.module.js"
+      }
+    }
+    </script>
+</head>
+<body>
+
+    <!-- 全景图容器 -->
     <div id="viewer"></div>
 
-    <!-- 引入 Three.js 依赖 -->
-    <script src="https://cdn.jsdelivr.net/npm/three/build/three.min.js"></script>
-    <!-- 引入 Photo Sphere Viewer 核心库 -->
-    <script src="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/core/index.min.js"></script>
+    <!-- 现代 ES 模块脚本入口 -->
+    <script type="module">
+        import { Viewer } from '@photo-sphere-viewer/core';
+        import { AutorotatePlugin } from '@photo-sphere-viewer/autorotate-plugin';
 
-    <script>
-      // 初始化 Photo Sphere Viewer
-      const viewer = new PhotoSphereViewer.Viewer({
-        container: document.querySelector('#viewer'),
-        panorama: 'panorama-1.jpg', // 你的全景图片文件名
-        autoload: true,
-        // 默认加载时的视角配置
-        defaultZoomLvl: 50,
-        // 开启自带的导航栏组件（包含全屏、缩放、陀螺仪等按钮）
-        navbar: [
-          'zoom',
-          'move',
-          'download',
-          'fullscreen'
-        ]
-      });
+        // 初始化全景图
+        const viewer = new Viewer({
+            container: document.querySelector('#viewer'),
+            panorama: 'pano.jpg', // 确保同级目录下有该照片
+            plugins: [
+                [AutorotatePlugin, {
+                    autorotateSpeed: '2rpm',
+                    autostartDelay: 1000,
+                }]
+            ]
+        });
     </script>
-  </body>
+
+</body>
 </html>
