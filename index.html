@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>我的全景 VR 空间</title>
+    <!-- 引入 A-Frame 框架 -->
+    <script src="https://aframe.io/releases/1.5.0/js/aframe.min.js"></script>
+    <style>
+      /* 简单的加载提示样式 */
+      #loading {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-family: sans-serif;
+        font-size: 20px;
+        background: rgba(0, 0, 0, 0.7);
+        padding: 10px 20px;
+        border-radius: 5px;
+        z-index: 999;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loading">正在加载全景图...</div>
+
+    <a-scene>
+      <a-assets>
+        <!-- 将全景图片命名为 panorama.jpg 并放在同级目录下 -->
+        <img id="pano" src="panorama.jpg" crossorigin="anonymous">
+      </a-assets>
+
+      <!-- 360度全景天空盒 -->
+      <a-sky src="#pano" rotation="0 -90 0"></a-sky>
+
+      <!-- 视角相机与准星，支持鼠标拖拽环视或 VR 眼镜重力感应 -->
+      <a-camera>
+        <a-cursor fuse="false" raycaster="objects: [data-clickable]"></a-cursor>
+      </a-camera>
+    </a-scene>
+
+    <script>
+      // 图片加载完成后隐藏提示
+      const img = document.querySelector('#pano');
+      const loading = document.querySelector('#loading');
+      img.addEventListener('load', () => {
+        loading.style.display = 'none';
+      });
+    </script>
+  </body>
+</html>
