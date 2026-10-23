@@ -1,65 +1,54 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
   <head>
     <meta charset="utf-8">
-    <title>360度全景古寺 VR 体验</title>
-    <!-- 引入 A-Frame 框架 -->
-    <script src="https://aframe.io/releases/1.5.0/js/aframe.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>360度全景 VR 体验 - Photo Sphere Viewer</title>
+    
+    <!-- 引入 Photo Sphere Viewer 样式文件 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.com/npm/@photo-sphere-viewer/core/index.min.css"/>
+    
     <style>
-      body {
+      html, body {
         margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
         background-color: #000;
       }
-      /* 加载提示样式 */
-      #loading {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: white;
-        font-family: system-ui, -apple-system, sans-serif;
-        font-size: 18px;
-        background: rgba(0, 0, 0, 0.8);
-        padding: 12px 24px;
-        border-radius: 8px;
-        z-index: 999;
-        pointer-events: none;
-        transition: opacity 0.5s ease;
+      /* 全景容器撑满全屏 */
+      #viewer {
+        width: 100%;
+        height: 100%;
       }
     </style>
   </head>
   <body>
-    <div id="loading">正在加载全景空间...</div>
 
-    <a-scene loading-screen="enabled: false">
-      <a-assets>
-        <!-- 将上面获取的全景图保存并重命名为 panorama.jpg 放在同级目录下 -->
-        <img id="pano" src="panorama.jpg" crossorigin="anonymous">
-      </a-assets>
+    <!-- 全景图挂载容器 -->
+    <div id="viewer"></div>
 
-      <!-- 360度全景天空盒，添加 rotation 调整初始视角正面 -->
-      <a-sky src="#pano" rotation="0 -90 0"></a-sky>
-
-      <!-- 相机与交互准星 -->
-      <a-camera position="0 1.6 0">
-        <a-cursor fuse="false" raycaster="objects: [data-clickable]"></a-cursor>
-      </a-camera>
-    </a-scene>
+    <!-- 引入 Three.js 依赖 -->
+    <script src="https://cdn.jsdelivr.net/npm/three/build/three.min.js"></script>
+    <!-- 引入 Photo Sphere Viewer 核心库 -->
+    <script src="https://cdn.jsdelivr.net/npm/@photo-sphere-viewer/core/index.min.js"></script>
 
     <script>
-      // 监听图片加载，隐藏加载提示
-      const img = document.querySelector('#pano');
-      const loading = document.querySelector('#loading');
-      
-      if (img.complete) {
-        loading.style.opacity = '0';
-        setTimeout(() => loading.style.display = 'none', 500);
-      } else {
-        img.addEventListener('load', () => {
-          loading.style.opacity = '0';
-          setTimeout(() => loading.style.display = 'none', 500);
-        });
-      }
+      // 初始化 Photo Sphere Viewer
+      const viewer = new PhotoSphereViewer.Viewer({
+        container: document.querySelector('#viewer'),
+        panorama: 'panorama.jpg', // 你的全景图片文件名
+        autoload: true,
+        // 默认加载时的视角配置
+        defaultZoomLvl: 50,
+        // 开启自带的导航栏组件（包含全屏、缩放、陀螺仪等按钮）
+        navbar: [
+          'zoom',
+          'move',
+          'download',
+          'fullscreen'
+        ]
+      });
     </script>
   </body>
 </html>
